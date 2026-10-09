@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Delta Sync · Design for Offline</title>
+<meta name="description" content="Fetch all relevant data first, then only what changed.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <a class="home" href="../index.html">← Design for Offline</a>
+  <a href="../index.html#concepts">Concept 2 of 5</a>
+</div></div>
+
+<header class="page-hero"><div class="wrap">
+  <p class="kicker">Local Read</p>
+  <h1>Delta Sync</h1>
+  <p class="subtitle">Fetch all relevant data first, then only what changed.</p>
+</div></header>
+
+<main class="article">
+<section>
+  <h2>Syncing is hard, so pick the experience first</h2>
+  <p>Before choosing a tool (CloudKit, Firebase, Couchbase, Yjs…) decide what product experience you want. The talk frames it as <strong>three rails</strong>, each one more powerful and more complex than the last:</p>
+  <div class="flow">
+    <div class="step accent"><b>Local Read</b><span>“Show me my data right now”</span></div><div class="arrow">→</div>
+    <div class="step"><b>Optimistic UI</b><span>“Let me act now”</span></div><div class="arrow">→</div>
+    <div class="step"><b>Collaboration</b><span>“Do not lose anyone’s intent”</span></div>
+  </div>
+  <p>Local Read is the first rail, and delta sync is how you keep the local store fresh without downloading everything every time.</p>
+</section>
+
+<section>
+  <h2>Initial sync, then deltas</h2>
+  <div class="compare">
+    <div class="card"><h3>Initial sync</h3><ul><li>Download all relevant data</li><li>Save a <code>lastUpdate</code> timestamp</li></ul></div>
+    <div class="card"><h3>Later syncs</h3><ul><li>Send <code>lastUpdate</code> to the server</li><li>Receive only what changed since then</li><li>Update <code>lastUpdate</code></li></ul></div>
+  </div>
+<pre><code><span class="k">func</span> sync() <span class="k">async throws</span> {
+    <span class="k">let</span> since = store.lastUpdate          <span class="c">// nil on first launch → full sync</span>
+    <span class="k">let</span> delta = <span class="k">try await</span> api.changes(since: since)
+
+    <span class="k">try</span> store.apply(delta.upserts, deletions: delta.deletedIDs)
+    store.lastUpdate = delta.serverTimestamp  <span class="c">// use the server's clock, not the device's</span>
+}</code></pre>
+</section>
+
+<section>
+  <h2>When do we trigger the sync?</h2>
+  <ul>
+    <li><strong>On app open</strong>: catch up on what happened while the app was closed.</li>
+    <li><strong>Pull to refresh</strong>: the user asks for it explicitly.</li>
+    <li><strong>After each POST / PUT</strong>: pick up server-side side effects of your own writes.</li>
+  </ul>
+  <div class="callout"><p>These events trigger synchronization; the UI keeps reading from the local store.</p></div>
+</section>
+
+<section>
+  <h2>Things to consider</h2>
+  <ul>
+    <li><strong>Initial sync can be really long.</strong> Show progress, sync the most important data first and make it resumable.</li>
+    <li><strong>Entities need a versioning mechanism.</strong> An <code>updatedAt</code> or version number lets both sides know what changed.</li>
+    <li><strong>You implement on-device logic.</strong> Sorting, filtering and search now happen locally, not in the backend query.</li>
+    <li><strong>The backend must support delta sync.</strong> That includes reporting deletions (tombstones), not just new and updated rows.</li>
+  </ul>
+</section>
+<nav class="pager" aria-label="Concept pages">
+<a class="card" href="persistent-store.html"><span class="label">← Previous</span><span class="title">The Persistent Store</span></a>
+<a class="card next" href="optimistic-ui.html"><span class="label">Next →</span><span class="title">Optimistic UI</span></a>
+
+</nav>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>From “Designing Mobile Apps for Offline” by Avi Tsadok · SwiftCon Berlin</p>
+    <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Leave feedback ↗</a></p>
+  </div>
+</footer>
+</body>
+</html>

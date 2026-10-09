@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design for Offline · Avi Tsadok</title>
+<meta name="description" content="Resources from the talk “Designing Mobile Apps for Offline” by Avi Tsadok at SwiftCon Berlin: further reading, feedback, books and contact.">
+<meta name="theme-color" content="#0a0a0f">
+<meta property="og:title" content="Designing Mobile Apps for Offline — Avi Tsadok">
+<meta property="og:description" content="Further reading, books and contact details from the SwiftCon Berlin talk.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <svg class="waves" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#14154a"/><stop offset="1" stop-color="#0d0f7a"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#101066" stop-opacity=".9"/><stop offset="1" stop-color="#1414a8"/>
+      </linearGradient>
+      <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0a0a0f" stop-opacity="0"/><stop offset=".8" stop-color="#0a0a0f" stop-opacity=".2"/><stop offset="1" stop-color="#0a0a0f"/>
+      </linearGradient>
+    </defs>
+    <path fill="url(#g1)" opacity=".55" d="M0 260 C120 230 200 120 330 150 S520 300 640 250 S820 110 920 170 S1120 330 1240 230 S1380 140 1440 170 V600 H0Z"/>
+    <path fill="url(#g2)" opacity=".75" d="M0 360 C140 330 260 250 400 300 S620 400 760 330 S960 180 1080 250 S1280 120 1440 160 V600 H0Z"/>
+    <path fill="#0c0d6e" opacity=".85" d="M0 470 C180 430 300 380 470 420 S760 500 900 430 S1180 300 1440 330 V600 H0Z"/>
+    <rect width="1440" height="600" fill="url(#fade)"/>
+  </svg>
+  <div class="wrap">
+    <div class="event">SwiftCon · Berlin <span class="status" id="status"><i></i><span>Online</span></span></div>
+    <h1>Designing Mobile Apps for Offline</h1>
+    <p class="subtitle">Designing Offline-First Apps: Empowering On-the-Go Users with Seamless Connectivity</p>
+    <div class="speaker">Avi Tsadok<span>Head of Mobile at Melio · Author · Blogger</span></div>
+    <nav class="jump" aria-label="Sections">
+      <a class="btn primary" href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Leave feedback</a>
+      <a class="btn" href="#concepts">Concepts</a>
+      <a class="btn" href="#reading">Further reading</a>
+      <a class="btn" href="#books">Books</a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="recap">
+    <div class="wrap">
+      <p class="kicker">The talk in one screen</p>
+      <h2>Design for Offline is all about <em>user experience</em></h2>
+      <p class="lede">It’s not an engineering question. Choose the product experience first, then the rail that delivers it.</p>
+
+      <div class="rails">
+        <div class="card rail"><div class="dot"></div><h3>Local Read</h3><p>“Show me my data right now”</p></div>
+        <div class="card rail"><div class="dot"></div><h3>Optimistic UI</h3><p>“Let me act now”</p></div>
+        <div class="card rail"><div class="dot"></div><h3>Collaboration</h3><p>“Do not lose anyone’s intent”</p></div>
+      </div>
+
+      <ol class="takeaways">
+        <li class="card"><b>01</b>Offline design is about user experience</li>
+        <li class="card"><b>02</b>Choose the experience first, then the rail</li>
+        <li class="card"><b>03</b>Conflict resolution starts with business rules</li>
+        <li class="card"><b>04</b>Balance user experience with complexity</li>
+        <li class="card"><b>05</b>Use sync tools with an understanding of their guarantees</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="concepts">
+    <div class="wrap">
+      <p class="kicker">Basic concepts</p>
+      <h2>The building blocks, explained</h2>
+      <p class="lede">Short pages that walk through each idea from the talk, from the local store to CRDTs.</p>
+      <div class="concepts">
+        <a class="card concept" href="concepts/persistent-store.html"><span class="num">01 · Local Read</span><h3>The Persistent Store</h3><p>Why a local, structured store, not a cache, should drive your UI.</p><span class="more">Read →</span></a>
+        <a class="card concept" href="concepts/delta-sync.html"><span class="num">02 · Local Read</span><h3>Delta Sync</h3><p>Fetch all relevant data first, then only what changed.</p><span class="more">Read →</span></a>
+        <a class="card concept" href="concepts/optimistic-ui.html"><span class="num">03 · Optimistic UI</span><h3>Optimistic UI</h3><p>Update the UI immediately. Confirm with the server later.</p><span class="more">Read →</span></a>
+        <a class="card concept" href="concepts/conflict-resolution.html"><span class="num">04 · Optimistic UI</span><h3>Conflict Resolution</h3><p>Conflict resolution starts with business rules, not algorithms.</p><span class="more">Read →</span></a>
+        <a class="card concept" href="concepts/crdt.html"><span class="num">05 · Collaboration</span><h3>CRDTs &amp; Collaboration</h3><p>Send the change, not the whole entity, and don’t lose anyone’s intent.</p><span class="more">Read →</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="reading">
+    <div class="wrap">
+      <p class="kicker">Further reading</p>
+      <h2>Go deeper</h2>
+      <p class="lede">The ideas behind the sync and conflict-resolution part of the talk.</p>
+      <div class="reading">
+        <a class="card link-card" href="https://crdt.tech/resources" target="_blank" rel="noopener">
+          <span class="tag">CRDT</span>
+          <h3>Conflict-free Replicated Data Types</h3>
+          <p>Papers, talks and libraries for data types that merge without conflicts — send the change, not the whole entity.</p>
+          <span class="src">crdt.tech <span>↗</span></span>
+        </a>
+        <a class="card link-card" href="https://cse.buffalo.edu/~demirbas/publications/hlc.pdf" target="_blank" rel="noopener">
+          <span class="tag">HLC</span>
+          <h3>Hybrid Logical Clocks</h3>
+          <p>Ordering events across devices with clocks that combine physical time and logical counters.</p>
+          <span class="src">University at Buffalo · PDF <span>↗</span></span>
+        </a>
+        <a class="card link-card" href="https://drive.googleblog.com/2010/09/whats-different-about-new-google-docs_22.html" target="_blank" rel="noopener">
+          <span class="tag">OT</span>
+          <h3>Operational Transformation</h3>
+          <p>How Google Docs merges concurrent text edits — the classic alternative to CRDTs.</p>
+          <span class="src">Google Drive Blog <span>↗</span></span>
+        </a>
+        <a class="card link-card" href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/" target="_blank" rel="noopener">
+          <span class="tag">Idempotency</span>
+          <h3>Making retries safe with idempotent APIs</h3>
+          <p>Why duplicate messages must not change the final state, and how to design APIs for safe retries.</p>
+          <span class="src">Amazon Builders’ Library <span>↗</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="feedback">
+    <div class="wrap">
+      <div class="card feedback">
+        <div>
+          <h2>How was the talk?</h2>
+          <p>Two minutes of your feedback helps me make the next one better.</p>
+        </div>
+        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Open feedback form ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="books">
+    <div class="wrap">
+      <p class="kicker">Books</p>
+      <h2>Books by Avi Tsadok</h2>
+      <p class="lede">From Core Data to testing to the iOS interview — available on Amazon.</p>
+      <div class="books">
+        <a class="book" href="https://www.amazon.com/s?k=9798868828140" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/realworld.jpg" alt="Real-World iOS Development cover"></div>
+          <h3>Real-World iOS Development</h3><p>Best Practices from Startups, Teams, and Indies · Apress</p><span class="amz">View on Amazon ↗</span>
+        </a>
+        <a class="book" href="https://www.amazon.com/dp/1835468101" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/ios18.jpg" alt="Mastering iOS 18 Development cover"></div>
+          <h3>Mastering iOS 18 Development</h3><p>iOS, Xcode, Swift and SwiftUI · Packt</p><span class="amz">View on Amazon ↗</span>
+        </a>
+        <a class="book" href="https://www.amazon.com/dp/1803246316" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/interview.jpg" alt="The Ultimate iOS Interview Playbook cover"></div>
+          <h3>The Ultimate iOS Interview Playbook</h3><p>Swift, frameworks, design patterns and architecture · Packt</p><span class="amz">View on Amazon ↗</span>
+        </a>
+        <a class="book" href="https://www.amazon.com/dp/1484282108" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/coredata.jpg" alt="Unleash Core Data cover"></div>
+          <h3>Unleash Core Data</h3><p>Fetching Data, Migrating, and Maintaining Persistent Stores · Apress</p><span class="amz">View on Amazon ↗</span>
+        </a>
+        <a class="book" href="https://www.amazon.com/dp/1484270487" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/spm.jpg" alt="Mastering Swift Package Manager cover"></div>
+          <h3>Mastering Swift Package Manager</h3><p>Build and Test Modular Apps Using Xcode · Apress</p><span class="amz">View on Amazon ↗</span>
+        </a>
+        <a class="book" href="https://www.amazon.com/dp/1484263812" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/testing.jpg" alt="Pro iOS Testing cover"></div>
+          <h3>Pro iOS Testing</h3><p>XCTest Framework for UI and Unit Testing · Apress</p><span class="amz">View on Amazon ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <p class="kicker">Get in touch</p>
+      <h2>Let’s keep talking</h2>
+      <p class="lede">Questions about offline-first, sync or anything iOS — reach out.</p>
+      <div class="contact">
+        <a class="card" href="mailto:avitsadok@me.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+          <span class="label">Email</span><span class="value">avitsadok@me.com</span>
+        </a>
+        <a class="card" href="https://x.com/avi_tsadok" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z"/></svg>
+          <span class="label">X / Twitter</span><span class="value">@avi_tsadok</span>
+        </a>
+        <a class="card" href="https://www.linkedin.com/in/avi-tsadok-86a75912/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.8v1.5h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13v5.43h-4v-4.8c0-1.15-.02-2.62-1.6-2.62-1.6 0-1.85 1.25-1.85 2.54v4.88h-4v-11Z"/></svg>
+          <span class="label">LinkedIn</span><span class="value">Avi Tsadok</span>
+        </a>
+        <a class="card" href="https://avitsadok.medium.com" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h12l4 4v12H4z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
+          <span class="label">Blog</span><span class="value">avitsadok.medium.com</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="thanks">Thank You!</p>
+    <p>Avi Tsadok · @avi_tsadok · SwiftCon Berlin</p>
+    <p>Fittingly, this page keeps working offline once you’ve opened it.</p>
+  </div>
+</footer>
+
+<script>
+  // Online/offline indicator — a small nod to the talk.
+  (function () {
+    var el = document.getElementById('status');
+    function update() {
+      var on = navigator.onLine;
+      el.classList.toggle('off', !on);
+      el.lastElementChild.textContent = on ? 'Online' : 'Offline — still works';
+    }
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    update();
+  })();
+  // Cache the page for offline use.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>

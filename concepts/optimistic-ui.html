@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Optimistic UI · Design for Offline</title>
+<meta name="description" content="Update the UI immediately. Confirm with the server later.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <a class="home" href="../index.html">← Design for Offline</a>
+  <a href="../index.html#concepts">Concept 3 of 5</a>
+</div></div>
+
+<header class="page-hero"><div class="wrap">
+  <p class="kicker">Optimistic UI</p>
+  <h1>Optimistic UI</h1>
+  <p class="subtitle">Update the UI immediately. Confirm with the server later.</p>
+</div></header>
+
+<main class="article">
+<section>
+  <h2>Let me act now</h2>
+  <p>The second rail lets users <strong>change</strong> data without waiting for the network. The UI updates instantly, and the server confirms later.</p>
+  <div class="flow">
+    <div class="step"><b>Ready</b><span>User taps “complete task”</span></div><div class="arrow">→</div>
+    <div class="step accent"><b>Pending</b><span>UI updates immediately; request in flight</span></div><div class="arrow">→</div>
+    <div class="step"><b>Confirmed</b><span>Server confirms later</span></div>
+  </div>
+  <ul>
+    <li>A meaningful increase in your app’s independence.</li>
+    <li>Changes happen without waiting for backend confirmation.</li>
+    <li>The assumption is that the backend <strong>will</strong> approve the changes.</li>
+    <li>Some of the business logic now lives in the client.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Creating content offline is business logic on steroids</h2>
+  <p>Editing an existing item is the easy case. Creating new content offline means the client must do work the backend used to do:</p>
+  <ul>
+    <li><strong>Establish relationships.</strong> A new contact belongs to a list (<em>Family</em>, <em>Friends</em>, <em>Work</em>) before the server has seen either.</li>
+    <li><strong>Generate unique IDs on the device.</strong> You can’t wait for the server to assign one.</li>
+    <li><strong>Validate data.</strong> Share the validation rules with the backend (for example as JSON) so both sides agree on what’s valid.</li>
+  </ul>
+<pre><code><span class="k">import</span> Foundation
+
+<span class="k">let</span> item = <span class="t">TodoItem</span>(
+    id: <span class="t">UUID</span>(),          <span class="c">// client-generated, globally unique</span>
+    listID: family.id,     <span class="c">// relationship established locally</span>
+    title: <span class="s">"Buy milk"</span>,
+    syncState: .pending
+)
+store.insert(item)         <span class="c">// UI updates now</span>
+outbox.enqueue(.create(item))  <span class="c">// sent when the network allows</span></code></pre>
+</section>
+
+<section>
+  <h2>When is Optimistic UI a good fit?</h2>
+  <p>It works well for to-do apps, note-taking, e-commerce and messaging, where:</p>
+  <ul>
+    <li>The environment is mostly <strong>single-user</strong>.</li>
+    <li>The <strong>update rate is low</strong>.</li>
+    <li><strong>Eventual consistency is acceptable.</strong></li>
+  </ul>
+  <p>The catch: the server can receive an <strong>outdated version</strong> when two devices edit the same data. That’s where <a href="conflict-resolution.html">conflict resolution</a> comes in.</p>
+</section>
+<nav class="pager" aria-label="Concept pages">
+<a class="card" href="delta-sync.html"><span class="label">← Previous</span><span class="title">Delta Sync</span></a>
+<a class="card next" href="conflict-resolution.html"><span class="label">Next →</span><span class="title">Conflict Resolution</span></a>
+
+</nav>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>From “Designing Mobile Apps for Offline” by Avi Tsadok · SwiftCon Berlin</p>
+    <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Leave feedback ↗</a></p>
+  </div>
+</footer>
+</body>
+</html>

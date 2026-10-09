@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conflict Resolution · Design for Offline</title>
+<meta name="description" content="Conflict resolution starts with business rules, not algorithms.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <a class="home" href="../index.html">← Design for Offline</a>
+  <a href="../index.html#concepts">Concept 4 of 5</a>
+</div></div>
+
+<header class="page-hero"><div class="wrap">
+  <p class="kicker">Optimistic UI</p>
+  <h1>Conflict Resolution</h1>
+  <p class="subtitle">Conflict resolution starts with business rules, not algorithms.</p>
+</div></header>
+
+<main class="article">
+<section>
+  <h2>Sync conflicts: not as simple as it seems</h2>
+  <p>Device A and device B both edit the same entity offline. When they reconnect, the backend receives two versions, and one of them was based on outdated data. What should win?</p>
+</section>
+
+<section>
+  <h2>The simple approach</h2>
+  <div class="compare">
+    <div class="card"><h3>Last Write Wins</h3><ul><li>The value can be safely replaced</li><li>Settings</li><li>Colors</li><li>“Last seen” time</li></ul></div>
+    <div class="card"><h3>First Write Wins</h3><ul><li>First accepted claim wins</li><li>Task ownership</li><li>Seat reservation</li><li>Code redemption</li></ul></div>
+  </div>
+  <div class="callout"><p>Choosing between them is a product decision: what does the user expect to happen?</p></div>
+</section>
+
+<section>
+  <h2>Merging changes, and how it goes wrong</h2>
+  <p>A smarter approach merges field by field: take the fields each device changed and combine them. It sounds safe until two independent edits combine into something invalid.</p>
+<pre><code><span class="c">// Original</span>
+{ <span class="s">"title"</span>: <span class="s">"Team meeting"</span>, <span class="s">"startHour"</span>: <span class="n">9</span>,  <span class="s">"endHour"</span>: <span class="n">12</span> }
+
+<span class="c">// Device A moves the start</span>          <span class="c">// Device B moves the end</span>
+{ <span class="s">"startHour"</span>: <span class="n">11</span>, <span class="s">"endHour"</span>: <span class="n">12</span> }      { <span class="s">"startHour"</span>: <span class="n">9</span>, <span class="s">"endHour"</span>: <span class="n">10</span> }
+
+<span class="c">// Field-level merge</span>
+{ <span class="s">"title"</span>: <span class="s">"Team meeting"</span>, <span class="s">"startHour"</span>: <span class="n">11</span>, <span class="s">"endHour"</span>: <span class="n">10</span> }  <span class="c">// -1 hour duration</span></code></pre>
+  <p>Each edit was valid, but the merged result is not. (“I wish all of my meetings had a -1 duration.”)</p>
+</section>
+
+<section>
+  <h2>Not yet solved</h2>
+  <p>Some data types can’t be merged by picking a winner at all:</p>
+  <ul>
+    <li><strong>Counters.</strong> Two devices each add a “clap” to 1. Both send <code>2</code>, but the correct answer is <code>3</code>.</li>
+    <li><strong>Lists.</strong> A adds “Orange”, B adds “Mango”. Replacing the whole list loses one of them.</li>
+    <li><strong>Text.</strong> A writes “Hello Amsterdam!”, B writes “Hello! :)”. Neither version is the answer.</li>
+  </ul>
+  <p>Cases like these need the third rail, <a href="crdt.html">Collaboration</a>, where you sync <em>intent</em> instead of state.</p>
+</section>
+<nav class="pager" aria-label="Concept pages">
+<a class="card" href="optimistic-ui.html"><span class="label">← Previous</span><span class="title">Optimistic UI</span></a>
+<a class="card next" href="crdt.html"><span class="label">Next →</span><span class="title">CRDTs &amp; Collaboration</span></a>
+
+</nav>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>From “Designing Mobile Apps for Offline” by Avi Tsadok · SwiftCon Berlin</p>
+    <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Leave feedback ↗</a></p>
+  </div>
+</footer>
+</body>
+</html>

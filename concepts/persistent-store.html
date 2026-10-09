@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Persistent Store · Design for Offline</title>
+<meta name="description" content="Why a local, structured store, not a cache, should drive your UI.">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <a class="home" href="../index.html">← Design for Offline</a>
+  <a href="../index.html#concepts">Concept 1 of 5</a>
+</div></div>
+
+<header class="page-hero"><div class="wrap">
+  <p class="kicker">Local Read</p>
+  <h1>The Persistent Store</h1>
+  <p class="subtitle">Why a local, structured store, not a cache, should drive your UI.</p>
+</div></header>
+
+<main class="article">
+<section>
+  <h2>Offline is a user-experience decision</h2>
+  <p>When we hear “design for offline” we picture a plane or an elevator. But users expect a polished UI, fast animations and up-to-date information <strong>even when they are online</strong>. A screen that waits on the network is a slow screen, no matter how fast the CPU or how optimized the Swift code is.</p>
+  <p>The goal: let people use the app <strong>at the speed of touch</strong>. The way to get there is to stop rendering screens straight from network responses.</p>
+  <div class="flow">
+    <div class="step accent"><b>UI</b><span>reads only from local storage</span></div><div class="arrow">→</div>
+    <div class="step"><b>Local Storage</b><span>the source of truth on the device</span></div><div class="arrow">⇄</div>
+    <div class="step"><b>Sync Manager</b><span>keeps it in step with the backend</span></div><div class="arrow">⇄</div>
+    <div class="step"><b>Backend</b><span>the shared source of truth</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Isn’t that just a cache?</h2>
+  <p>No. A cache and a persistent store solve different problems.</p>
+  <div class="compare">
+    <div class="card"><h3>Cache</h3><ul><li>Avoids re-calculations</li><li>Boosts speed &amp; performance</li><li>Temporary storage</li></ul></div>
+    <div class="card"><h3>Persistent Store</h3><ul><li>Structured data storage</li><li>Query capabilities</li><li>Supports modifications</li><li>Long-term retention</li></ul></div>
+  </div>
+  <div class="callout"><p>The persistent store drives the UI and preserves pending edits.</p></div>
+  <p>A cache can be thrown away at any time. A persistent store holds data the user created and hasn’t synced yet, so it has to be modelled, queried and migrated like a real database.</p>
+</section>
+
+<section>
+  <h2>How do we build one?</h2>
+  <p>On iOS you have three common options, all of which map storage onto entities:</p>
+  <ul>
+    <li><strong>SQLite</strong>: tables you map to entities yourself (or through a library such as GRDB).</li>
+    <li><strong>Core Data</strong>: a schema (the model) that generates managed entities.</li>
+    <li><strong>SwiftData</strong>: the model <em>is</em> the entity.</li>
+  </ul>
+<pre><code><span class="k">import</span> SwiftData
+
+<span class="k">@Model</span>
+<span class="k">final class</span> <span class="t">Trip</span> {
+    <span class="k">@Attribute</span>(.unique) <span class="k">var</span> id: <span class="t">UUID</span>
+    <span class="k">var</span> city: <span class="t">String</span>
+    <span class="k">var</span> updatedAt: <span class="t">Date</span>
+    <span class="k">var</span> syncState: <span class="t">SyncState</span>   <span class="c">// .synced, .pending, .failed</span>
+}</code></pre>
+  <p>The basic idea is to have everything the user needs <strong>on the device, structured and up to date</strong>.</p>
+</section>
+
+<section>
+  <h2>Why take on this headache?</h2>
+  <ul>
+    <li><strong>Consistency.</strong> Every screen reads the same data, so an edit on one screen shows up everywhere instead of each endpoint (<code>/trips</code>, <code>/Paris/locations</code>, <code>/alerts</code>) returning its own snapshot.</li>
+    <li><strong>Simplicity.</strong> Screens query a local store instead of coordinating many endpoints, loading states and retries.</li>
+    <li><strong>On-device AI.</strong> App data, history and device signals sit in one place where on-device models can use them, privately and instantly.</li>
+    <li><strong>Stability.</strong> When the backend is unavailable, the app keeps working.</li>
+  </ul>
+</section>
+<nav class="pager" aria-label="Concept pages">
+<a class="card next" href="delta-sync.html"><span class="label">Next →</span><span class="title">Delta Sync</span></a>
+
+</nav>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>From “Designing Mobile Apps for Offline” by Avi Tsadok · SwiftCon Berlin</p>
+    <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScCmfHy2QwY6IHJ2rU8sH6Pkw4UBZiXBW6CcVVRYZcN9jEBsw/viewform?usp=publish-editor" target="_blank" rel="noopener">Leave feedback ↗</a></p>
+  </div>
+</footer>
+</body>
+</html>
